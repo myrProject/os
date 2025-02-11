@@ -92,10 +92,12 @@ debug_imagesize:
 # cp iso/*.iso /var/lib/libvirt/images/
 .PHONY: test_kvm_bios # test resulting live image in libvirt VM with legacy BIOS
 test_kvm_bios:
-	virt-install --name dlc-test --osinfo debian11 --boot cdrom --video virtio --disk path=$(LIBVIRT_STORAGE_PATH)/dlc-test-disk0.qcow2,format=qcow2,size=20,device=disk,bus=virtio,cache=none --cdrom "$(LIBVIRT_STORAGE_PATH)debian-live-config-$(LAST_TAG)-debian-bookworm-amd64.iso" --memory 3048 --vcpu 2
-	virsh destroy dlc-test
-	virsh undefine dlc-test
-	rm -f $$PWD/dlc-test-disk0.qcow2
+	sudo cp *.iso $(LIBVIRT_STORAGE_PATH)
+	sudo virt-install --name dlc-test --osinfo debian11 --boot cdrom --video virtio --disk path=$(LIBVIRT_STORAGE_PATH)/dlc-test-disk0.qcow2,format=qcow2,size=20,device=disk,bus=virtio,cache=none --cdrom "$(LIBVIRT_STORAGE_PATH)live-image-amd64.hybrid.iso" --memory 3048 --vcpu 2
+	virt-viewer --connect qemu:///system
+	sudo virsh -c qemu:///system destroy dlc-test
+	sudo virsh -c qemu:///system undefine dlc-test
+	# rm -f $$PWD/dlc-test-disk0.qcow2
 
 # UEFI support must be enabled in QEMU config for EFI install tests https://wiki.archlinux.org/index.php/Libvirt#UEFI_Support (/usr/share/OVMF/*.fd)
 .PHONY: test_kvm_uefi # test resulting live image in libvirt VM with UEFI
