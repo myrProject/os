@@ -12,5 +12,10 @@ config/binary
 config/bootstrap
 config/chroot
 config/common
+config/packages.chroot
+config/includes.chroot/usr/lib
+config/hooks
 *.duc-index
 iso/
+live-image-amd64*
+binary.modified_timestamps
